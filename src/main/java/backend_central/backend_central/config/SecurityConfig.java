@@ -63,7 +63,10 @@ public class SecurityConfig {
                 "http://172.17.*:*",
                 "https://172.17.248.188",
                 "http://172.17.248.188",
-                "http://172.17.249.85:3000"
+                "http://172.17.249.85:3000",
+                "https://centralkui.vercel.app",
+                "https://centralkui.vercel.app.*",
+                "https://centralkui.vercel.app/*"
         ));
 
         configuration.setAllowedMethods(Arrays.asList(
