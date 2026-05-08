@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface InstitucionRepository extends JpaRepository<Institucion, UUID> {
+public interface InstitucionRepository extends JpaRepository<Institucion, Long> {
     boolean existsBySubdominio(String subdominio);
     Optional<Institucion> findByApiKey(String apiKey);
     List<Institucion> findByEstadoAndFechaVencimientoBefore(EstadoInstitucion estado, LocalDate fecha);

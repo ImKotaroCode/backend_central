@@ -48,11 +48,11 @@ public class InstitucionService {
         return repository.findAll().stream().map(InstitucionResponse::from).toList();
     }
 
-    public InstitucionResponse obtener(UUID id) {
+    public InstitucionResponse obtener(Long id) {
         return InstitucionResponse.from(buscar(id));
     }
 
-    public InstitucionResponse actualizar(UUID id, InstitucionUpdateRequest req) {
+    public InstitucionResponse actualizar(Long id, InstitucionUpdateRequest req) {
         Institucion inst = buscar(id);
         inst.setNombre(req.getNombre());
         inst.setEmailContacto(req.getEmailContacto());
@@ -61,7 +61,7 @@ public class InstitucionService {
         return InstitucionResponse.from(repository.save(inst));
     }
 
-    public InstitucionResponse activar(UUID id) {
+    public InstitucionResponse activar(Long id) {
         Institucion inst = buscar(id);
         inst.setEstado(EstadoInstitucion.ACTIVO);
         inst = repository.save(inst);
@@ -69,7 +69,7 @@ public class InstitucionService {
         return InstitucionResponse.from(inst);
     }
 
-    public InstitucionResponse suspender(UUID id) {
+    public InstitucionResponse suspender(Long id) {
         Institucion inst = buscar(id);
         inst.setEstado(EstadoInstitucion.SUSPENDIDO);
         inst = repository.save(inst);
@@ -77,7 +77,7 @@ public class InstitucionService {
         return InstitucionResponse.from(inst);
     }
 
-    public InstitucionResponse renovar(UUID id, RenovarRequest req) {
+    public InstitucionResponse renovar(Long id, RenovarRequest req) {
         Institucion inst = buscar(id);
         inst.setFechaVencimiento(req.getFechaVencimiento());
         if (inst.getEstado() == EstadoInstitucion.VENCIDO) {
@@ -86,11 +86,11 @@ public class InstitucionService {
         return InstitucionResponse.from(repository.save(inst));
     }
 
-    public void eliminar(UUID id) {
+    public void eliminar(Long id) {
         repository.delete(buscar(id));
     }
 
-    private Institucion buscar(UUID id) {
+    private Institucion buscar(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Institución no encontrada: " + id));
     }

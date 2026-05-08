@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Data
 public class InstitucionResponse {
-    private UUID id;
+    private Long id;
     private String nombre;
     private String tipo;
     private String emailContacto;

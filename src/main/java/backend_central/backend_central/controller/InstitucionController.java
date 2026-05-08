@@ -32,34 +32,34 @@ public class InstitucionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InstitucionResponse> obtener(@PathVariable UUID id) {
+    public ResponseEntity<InstitucionResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(service.obtener(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InstitucionResponse> actualizar(@PathVariable UUID id,
+    public ResponseEntity<InstitucionResponse> actualizar(@PathVariable Long id,
                                                           @Valid @RequestBody InstitucionUpdateRequest request) {
         return ResponseEntity.ok(service.actualizar(id, request));
     }
 
     @PatchMapping("/{id}/activar")
-    public ResponseEntity<InstitucionResponse> activar(@PathVariable UUID id) {
+    public ResponseEntity<InstitucionResponse> activar(@PathVariable Long id) {
         return ResponseEntity.ok(service.activar(id));
     }
 
     @PatchMapping("/{id}/suspender")
-    public ResponseEntity<InstitucionResponse> suspender(@PathVariable UUID id) {
+    public ResponseEntity<InstitucionResponse> suspender(@PathVariable Long id) {
         return ResponseEntity.ok(service.suspender(id));
     }
 
     @PatchMapping("/{id}/renovar")
-    public ResponseEntity<InstitucionResponse> renovar(@PathVariable UUID id,
+    public ResponseEntity<InstitucionResponse> renovar(@PathVariable Long id,
                                                        @Valid @RequestBody RenovarRequest request) {
         return ResponseEntity.ok(service.renovar(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
