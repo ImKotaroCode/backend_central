@@ -4,6 +4,7 @@ import backend_central.backend_central.dto.LicenciaResponse;
 import backend_central.backend_central.entity.Institucion;
 import backend_central.backend_central.enums.EstadoInstitucion;
 import backend_central.backend_central.repository.InstitucionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,38 @@ public class LicenciaService {
             return LicenciaResponse.invalida("VENCIDO");
         }
 
-        return LicenciaResponse.valida();
+        return LicenciaResponse.valida(inst);
+    }
+
+    public LicenciaResponse validarPorSubdominio(String subdominio) {
+        Institucion inst = repository.findBySubdominio(subdominio)
+                .orElseThrow(() -> new EntityNotFoundException("Institución no encontrada: " + subdominio));
+
+        if (inst.getEstado() == EstadoInstitucion.SUSPENDIDO) {
+            return LicenciaResponse.invalida("SUSPENDIDO");
+        }
+        if (inst.getEstado() == EstadoInstitucion.VENCIDO || inst.getFechaVencimiento().isBefore(LocalDate.now())) {
+            return LicenciaResponse.invalida("VENCIDO");
+        }
+        return LicenciaResponse.valida(inst);
+    }
+
+    public LicenciaResponse validarPorId(Long institutionId) {
+        Institucion inst = repository.findById(institutionId)
+                .orElseThrow(() -> new EntityNotFoundException("Institución no encontrada: " + institutionId));
+
+        if (inst.getEstado() == EstadoInstitucion.SUSPENDIDO) {
+            return LicenciaResponse.invalida("SUSPENDIDO");
+        }
+
+        if (inst.getEstado() == EstadoInstitucion.VENCIDO) {
+            return LicenciaResponse.invalida("VENCIDO");
+        }
+
+        if (inst.getFechaVencimiento().isBefore(LocalDate.now())) {
+            return LicenciaResponse.invalida("VENCIDO");
+        }
+
+        return LicenciaResponse.valida(inst);
     }
 }

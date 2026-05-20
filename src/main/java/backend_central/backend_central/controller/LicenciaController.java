@@ -20,4 +20,14 @@ public class LicenciaController {
     public ResponseEntity<LicenciaResponse> validar(@PathVariable String apiKey) {
         return ResponseEntity.ok(licenciaService.validar(apiKey));
     }
+
+    @GetMapping("/validar/id/{institutionId}")
+    public ResponseEntity<LicenciaResponse> validarPorId(@PathVariable Long institutionId) {
+        return ResponseEntity.ok(licenciaService.validarPorId(institutionId));
+    }
+
+    @GetMapping("/validar/subdominio/{subdominio}")
+    public ResponseEntity<LicenciaResponse> validarPorSubdominio(@PathVariable String subdominio) {
+        return ResponseEntity.ok(licenciaService.validarPorSubdominio(subdominio));
+    }
 }

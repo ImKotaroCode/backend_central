@@ -41,7 +41,9 @@ public class InstitucionService {
         inst.setEstado(EstadoInstitucion.ACTIVO);
         inst.setFechaVencimiento(req.getFechaVencimiento());
 
-        return InstitucionResponse.from(repository.save(inst));
+        inst = repository.save(inst);
+        triggerOnboarding(inst);
+        return InstitucionResponse.from(inst);
     }
 
     public List<InstitucionResponse> listar() {
@@ -100,13 +102,30 @@ public class InstitucionService {
         try {
             restClientBuilder.build()
                     .post()
-                    .uri(inst.getBackendUrl() + "/api/licencia/notificacion")
+                    .uri(inst.getBackendUrl() + "/api/internal/licencia/notificacion")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of("estado", inst.getEstado().name()))
+                    .body(Map.of("estado", inst.getEstado().name(), "institutionId", inst.getId()))
                     .retrieve()
                     .toBodilessEntity();
         } catch (Exception e) {
             log.warn("Notificación fallida para {} ({}): {}", inst.getNombre(), inst.getId(), e.getMessage());
+        }
+    }
+
+    private void triggerOnboarding(Institucion inst) {
+        if (inst.getBackendUrl() == null || inst.getBackendUrl().isBlank()) return;
+        try {
+            restClientBuilder.build()
+                    .post()
+                    .uri(inst.getBackendUrl() + "/api/internal/onboarding")
+                    .header("X-API-KEY", inst.getApiKey())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("admin_email", inst.getEmailContacto()))
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("Onboarding disparado para {} (id={})", inst.getNombre(), inst.getId());
+        } catch (Exception e) {
+            log.warn("Onboarding fallido para {} ({}): {}", inst.getNombre(), inst.getId(), e.getMessage());
         }
     }
 }

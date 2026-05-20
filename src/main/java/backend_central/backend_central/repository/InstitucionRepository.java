@@ -12,5 +12,6 @@ import java.util.UUID;
 public interface InstitucionRepository extends JpaRepository<Institucion, Long> {
     boolean existsBySubdominio(String subdominio);
     Optional<Institucion> findByApiKey(String apiKey);
+    Optional<Institucion> findBySubdominio(String subdominio);
     List<Institucion> findByEstadoAndFechaVencimientoBefore(EstadoInstitucion estado, LocalDate fecha);
 }
