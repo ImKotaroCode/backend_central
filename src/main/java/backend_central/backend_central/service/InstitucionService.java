@@ -42,8 +42,17 @@ public class InstitucionService {
         inst.setFechaVencimiento(req.getFechaVencimiento());
 
         inst = repository.save(inst);
-        triggerOnboarding(inst);
-        return InstitucionResponse.from(inst);
+        Map<String, Object> onboardingResult = triggerOnboarding(inst);
+
+        InstitucionResponse response = InstitucionResponse.from(inst);
+        if (onboardingResult != null) {
+            response.setAdminEmail(String.valueOf(onboardingResult.getOrDefault("email", inst.getEmailContacto())));
+            Object pwd = onboardingResult.get("tempPassword");
+            if (pwd != null && !pwd.toString().equals("null")) {
+                response.setAdminTempPassword(pwd.toString());
+            }
+        }
+        return response;
     }
 
     public List<InstitucionResponse> listar() {
@@ -112,20 +121,23 @@ public class InstitucionService {
         }
     }
 
-    private void triggerOnboarding(Institucion inst) {
-        if (inst.getBackendUrl() == null || inst.getBackendUrl().isBlank()) return;
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> triggerOnboarding(Institucion inst) {
+        if (inst.getBackendUrl() == null || inst.getBackendUrl().isBlank()) return null;
         try {
-            restClientBuilder.build()
+            Map<String, Object> result = restClientBuilder.build()
                     .post()
                     .uri(inst.getBackendUrl() + "/api/internal/onboarding")
                     .header("X-API-KEY", inst.getApiKey())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Map.of("admin_email", inst.getEmailContacto()))
                     .retrieve()
-                    .toBodilessEntity();
-            log.info("Onboarding disparado para {} (id={})", inst.getNombre(), inst.getId());
+                    .body(Map.class);
+            log.info("Onboarding disparado para {} (id={}): {}", inst.getNombre(), inst.getId(), result);
+            return result;
         } catch (Exception e) {
             log.warn("Onboarding fallido para {} ({}): {}", inst.getNombre(), inst.getId(), e.getMessage());
+            return null;
         }
     }
 }

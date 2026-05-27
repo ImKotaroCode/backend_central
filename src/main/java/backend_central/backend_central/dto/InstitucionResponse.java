@@ -24,6 +24,10 @@ public class InstitucionResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaVencimiento;
 
+    /** Solo presente al crear por primera vez — credenciales del admin generadas en onboarding */
+    private String adminEmail;
+    private String adminTempPassword;
+
     public static InstitucionResponse from(Institucion i) {
         InstitucionResponse r = new InstitucionResponse();
         r.setId(i.getId());
