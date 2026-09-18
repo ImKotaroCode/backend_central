@@ -29,7 +29,6 @@ public class Institucion {
     @Column(unique = true, nullable = false)
     private String subdominio;
 
-    @Column(nullable = false)
     private String backendUrl;
 
     @Column(unique = true, nullable = false)
@@ -43,6 +42,18 @@ public class Institucion {
 
     @Column(nullable = false)
     private LocalDate fechaVencimiento;
+
+    // RUC o codigo modular de la institucion
+    private String ruc;
+
+    // Dominio deseado (texto libre) informado en el checkout; se provisiona manualmente despues
+    private String dominioDeseado;
+
+    private String culqiCustomerId;
+    private String culqiCardId;
+    private String culqiSubscriptionId;
+    private Integer alumnosContratados;
+    private Integer montoMensual;
 
     @PrePersist
     protected void onCreate() {

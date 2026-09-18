@@ -14,4 +14,5 @@ public interface InstitucionRepository extends JpaRepository<Institucion, Long> 
     Optional<Institucion> findByApiKey(String apiKey);
     Optional<Institucion> findBySubdominio(String subdominio);
     List<Institucion> findByEstadoAndFechaVencimientoBefore(EstadoInstitucion estado, LocalDate fecha);
+    Optional<Institucion> findByCulqiSubscriptionId(String culqiSubscriptionId);
 }
