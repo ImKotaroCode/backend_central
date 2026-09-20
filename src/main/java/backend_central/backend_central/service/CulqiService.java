@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.util.HashMap;
 import java.util.Map;
 
 // Integracion con la API de Culqi (clientes, tarjetas, planes y suscripciones recurrentes).
@@ -49,17 +50,30 @@ public class CulqiService {
         return (String) result.get("id");
     }
 
-    @SuppressWarnings("unchecked")
     public String crearPlan(String nombre, int montoCentimos, int trialDias) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("name", nombre);
+        body.put("amount", montoCentimos);
+        body.put("currency_code", "PEN");
+        body.put("interval_unit_time", 3);
+        body.put("interval_count", 1);
+        if (trialDias > 0) {
+            body.put("trial_days", trialDias);
+        }
+        Map<String, Object> result = post("/recurrent/plans", body);
+        return (String) result.get("id");
+    }
+
+    // Cargo unico inmediato (token Yape o tarjeta). source_id es el token de Culqi.
+    public String crearCargo(String tokenId, String email, int montoCentimos, String descripcion) {
         Map<String, Object> body = Map.of(
-                "name", nombre,
                 "amount", montoCentimos,
                 "currency_code", "PEN",
-                "interval_unit_time", 3,
-                "interval_count", 1,
-                "trial_days", trialDias
+                "email", email,
+                "source_id", tokenId,
+                "description", descripcion
         );
-        Map<String, Object> result = post("/recurrent/plans", body);
+        Map<String, Object> result = post("/charges", body);
         return (String) result.get("id");
     }
 

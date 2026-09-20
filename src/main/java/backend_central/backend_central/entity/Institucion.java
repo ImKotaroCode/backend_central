@@ -55,6 +55,12 @@ public class Institucion {
     private Integer alumnosContratados;
     private Integer montoMensual;
 
+    // ROCKET o INICIAL
+    private String plan;
+
+    // Yape es pago unico: queda true hasta que la institucion registre una tarjeta (Boolean, no boolean, para no romper filas existentes)
+    private Boolean requiereMedioRecurrente;
+
     @PrePersist
     protected void onCreate() {
         fechaCreacion = LocalDateTime.now();

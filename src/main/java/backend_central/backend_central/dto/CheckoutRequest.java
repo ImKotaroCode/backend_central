@@ -18,8 +18,13 @@ public class CheckoutRequest {
     @Positive
     private Integer alumnos;
 
-    // Informativo; el backend recalcula el monto real, no confia en este valor
+    // Informativos; el backend recalcula los montos reales, no confia en estos valores
     private Integer montoMensual;
+
+    private Integer montoHoy;
+
+    // "card" o "yape"
+    private String metodoPago = "card";
 
     @NotNull
     @Valid

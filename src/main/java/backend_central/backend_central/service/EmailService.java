@@ -33,9 +33,13 @@ public class EmailService {
             message.setSubject("Bienvenido a KUI - " + inst.getNombre());
             message.setText(
                     "Hola " + contactoNombre + ",\n\n" +
-                    "Tu institucion \"" + inst.getNombre() + "\" ya fue registrada en KUI con el Plan Rocket " +
-                    "(6 meses de prueba gratis).\n\n" +
+                    "Tu institucion \"" + inst.getNombre() + "\" ya fue registrada en KUI con el Plan " +
+                    ("ROCKET".equals(inst.getPlan()) ? "Rocket (6 meses de prueba gratis)" : "Inicial") + ".\n\n" +
                     "Ingresa aqui para continuar: " + loginUrl + "\n\n" +
+                    (Boolean.TRUE.equals(inst.getRequiereMedioRecurrente())
+                            ? "Pagaste con Yape (pago unico). Antes de que termine tu primer mes registra una tarjeta " +
+                              "para que tu suscripcion continue sin interrupciones.\n\n"
+                            : "") +
                     "Equipo KUI"
             );
             mailSender.send(message);
